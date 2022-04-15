@@ -20,59 +20,41 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        520,
-        260
+        440,
+        480
       ],
       "webhookId": "7ef0f4ac-0b90-470c-9ccf-59e4627b970a"
     },
     {
       "parameters": {
-        "functionCode": "const json = {\n  uuid: \"uuid-0000\",\n  data: {\n    payment_status: {\n      mdOrder: items[0].json.query.mdOrder,\n      operation: items[0].json.query.operation,\n      status: items[0].json.query.status,\n    }\n  }\n}\n\nreturn items;"
+        "functionCode": "const json = {\n  uuid: \"uuid-0000\",\n  data: {\n    payment_status: {\n      mdOrder: items[0].json.query.mdOrder,\n      operation: items[0].json.query.operation,\n      status: items[0].json.query.status,\n    }\n  }\n}\n\nreturn json;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        740,
-        260
+        600,
+        480
       ]
     },
     {
       "parameters": {
         "queue": "n8n:order_status_changed",
-        "options": {}
+        "options": {
+          "durable": true
+        }
       },
       "name": "RabbitMQ",
       "type": "n8n-nodes-base.rabbitmq",
       "typeVersion": 1,
       "position": [
-        980,
-        460
+        760,
+        480
       ],
       "credentials": {
         "rabbitmq": {
           "id": "1",
           "name": "RabbitMQ account"
-        }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "sink": "n8n:order_status_changed",
-        "options": {}
-      },
-      "name": "AMQP Sender",
-      "type": "n8n-nodes-base.amqp",
-      "typeVersion": 1,
-      "position": [
-        980,
-        260
-      ],
-      "credentials": {
-        "amqp": {
-          "id": "2",
-          "name": "AMQP account"
         }
       }
     }
@@ -93,7 +75,7 @@
       "main": [
         [
           {
-            "node": "AMQP Sender",
+            "node": "RabbitMQ",
             "type": "main",
             "index": 0
           }
