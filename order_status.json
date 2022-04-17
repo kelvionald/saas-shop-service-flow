@@ -27,7 +27,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const json = {\n  uuid: \"uuid-0000\",\n  data: {\n    payment_status: {\n      mdOrder: items[0].json.query.mdOrder,\n      operation: items[0].json.query.operation,\n      status: items[0].json.query.status,\n    }\n  }\n}\n\nreturn json;"
+        "functionCode": "function uuidv4() {\n    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {\n        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);\n        return v.toString(16);\n    });\n}\n\nconst json = {\n  uuid: uuidv4(),\n  data: {\n    payment_status: {\n      mdOrder: items[0].json.query.mdOrder,\n      operation: items[0].json.query.operation,\n      status: items[0].json.query.status,\n    }\n  }\n}\n\nreturn json;"
       },
       "name": "Function",
       "type": "n8n-nodes-base.function",
