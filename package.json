@@ -1,0 +1,25 @@
+{
+  "name": "saas-shop-service-flow",
+  "version": "1.0.0",
+  "description": "- https://docs.n8n.io/hosting/installation/docker/\r - Нужно поместить в папку /home/node/.n8n флоу *.json",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kelvionald/saas-shop-service-flow.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kelvionald/saas-shop-service-flow/issues"
+  },
+  "homepage": "https://github.com/kelvionald/saas-shop-service-flow#readme",
+  "dependencies": {
+    "amqplib": "^0.8.0"
+  }
+}

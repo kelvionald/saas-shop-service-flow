@@ -1,0 +1,99 @@
+{
+  "name": "order_debit_soon",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "queue": "order_service:order.debit_soon",
+        "options": {
+          "autoDelete": false,
+          "durable": false,
+          "exclusive": false
+        }
+      },
+      "name": "RabbitMQ Trigger",
+      "type": "n8n-nodes-base.rabbitmqTrigger",
+      "typeVersion": 1,
+      "position": [
+        480,
+        300
+      ],
+      "credentials": {
+        "rabbitmq": {
+          "id": "1",
+          "name": "RabbitMQ account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var data = JSON.parse(items[0].json.content)\n\nconsole.log(data);\n\nreturn data;"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "preobrzs@yandex.ru",
+        "toEmail": "={{$node[\"Function2\"].json[\"data\"][\"user\"][\"email\"]}}",
+        "subject": "Уведомление о скором списании средств с карты",
+        "html": "=Ваш счет №  {{$node[\"Function2\"].json[\"data\"][\"order\"][\"order_id\"]}} будет автоматически продлен через 7 дней.<br><br>\nИнформация о продлении:<br>\n<b>Продукт: </b>{{$node[\"Function2\"].json[\"data\"][\"order\"][\"tariff_variant\"][\"tariff\"][\"product\"][\"name\"]}}<br>\n<b>Тариф: </b>{{$node[\"Function2\"].json[\"data\"][\"order\"][\"tariff_variant\"][\"tariff\"][\"name\"]}}<br>\n<b>Периодичность: </b>{{$node[\"Function2\"].json[\"data\"][\"order\"][\"tariff_variant\"][\"period\"] == '30' ? 'Помесячный' : 'По годичный'}}<br>\n<b>Количество лицензий: </b> {{$node[\"Function2\"].json[\"data\"][\"order\"][\"licenses_count\"]}}<br>",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        840,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "3",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "RabbitMQ Trigger": {
+      "main": [
+        [
+          {
+            "node": "Function2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function2": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": 1
+}

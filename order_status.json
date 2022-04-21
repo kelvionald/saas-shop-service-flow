@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "order_status",
   "nodes": [
     {
       "parameters": {},
