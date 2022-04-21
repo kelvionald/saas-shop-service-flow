@@ -1,0 +1,25 @@
+name: Ci
+
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Шаги представляют собой последовательность задач, которые будут выполняться как часть задания.
+    steps:
+     - name: Checkout 
+       uses: actions/checkout@v2
+     - name: executing remote ssh commands using password
+       uses: appleboy/ssh-action@master
+       with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASSWORD }}
+        script: |
+            cd /home/student/compose
+            docker-compose down
+            rm -R saas-shop-service-flow
+            git clone https://github.com/kelvionald/saas-shop-service-flow
+            docker-compose up -d
