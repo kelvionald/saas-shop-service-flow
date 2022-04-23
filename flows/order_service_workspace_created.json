@@ -1,0 +1,99 @@
+{
+  "name": "order_service_workspace_created",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "queue": "order_service:workspace.created",
+        "options": {
+          "autoDelete": false,
+          "durable": false,
+          "exclusive": false
+        }
+      },
+      "name": "RabbitMQ Trigger",
+      "type": "n8n-nodes-base.rabbitmqTrigger",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ],
+      "credentials": {
+        "rabbitmq": {
+          "id": "1",
+          "name": "RabbitMQ account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "var data = JSON.parse(items[0].json.content)\n\nconsole.log(data);\n\nreturn data;"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "preobrzs@yandex.ru",
+        "toEmail": "={{$node[\"Function2\"].json[\"data\"][\"user\"][\"email\"]}}",
+        "subject": "Уведомление о создании пространства",
+        "html": "=Ваше пространство <a href=\"https://{{$node[\"Function2\"].json[\"data\"][\"workspace\"][\"name\"]}}.sk.ru\">{{$node[\"Function2\"].json[\"data\"][\"workspace\"][\"name\"]}}.sk.ru</a> создано. Вскоре оно будет активировано.",
+        "options": {}
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "3",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "RabbitMQ Trigger": {
+      "main": [
+        [
+          {
+            "node": "Function2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function2": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": 2
+}
